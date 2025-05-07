@@ -56,7 +56,7 @@ public class SplashFragment extends Fragment implements ISplashFragmentView {
     @Override
     public void navToNextScreen() {
         Activity activity = getActivity();
-        if (activity instanceof INavigationListener)
-            ((MainActivity) activity).navToHome();
+        if (activity instanceof ISplashNavListener)
+            ((MainActivity) activity).navToEntryScreen();
     }
 }

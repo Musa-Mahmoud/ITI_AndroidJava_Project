@@ -2,4 +2,30 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Light mode colors -->
+    <color name="primary">#077A7D</color>
+    <color name="primary_variant">#06202B</color>
+    <color name="secondary">#7AE2CF</color>
+    <color name="background">#F5EEDD</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#06202B</color>
+    <color name="on_background">#06202B</color>
+    <color name="on_surface">#06202B</color>
+    <color name="gradient_start_light">#7AE2CF</color>
+    <color name="gradient_end_light">#077A7D</color>
+
+    <!-- Dark mode colors -->
+    <color name="primary_dark">#7AE2CF</color>
+    <color name="primary_variant_dark">#077A7D</color>
+    <color name="secondary_dark">#F5EEDD</color>
+    <color name="background_dark">#06202B</color>
+    <color name="surface_dark">#1E2D3F</color>
+    <color name="on_primary_dark">#06202B</color>
+    <color name="on_secondary_dark">#06202B</color>
+    <color name="on_background_dark">#F5EEDD</color>
+    <color name="on_surface_dark">#F5EEDD</color>
+    <color name="gradient_start_dark">#F5EEDD</color>
+    <color name="gradient_end_dark">#7AE2CF</color>
 </resources>
