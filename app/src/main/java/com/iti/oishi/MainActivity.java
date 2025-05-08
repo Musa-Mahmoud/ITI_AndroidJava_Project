@@ -1,48 +1,46 @@
 package com.iti.oishi;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
-import com.iti.oishi.login.view.LoginFragment;
-import com.iti.oishi.model.dto.Meal;
-import com.iti.oishi.model.dto.MealResponse;
-import com.iti.oishi.model.dto.Name;
-import com.iti.oishi.model.dto.NameResponse;
-import com.iti.oishi.model.remote.MealsRemoteDataSource;
-import com.iti.oishi.model.remote.network.INetworkCallback;
-import com.iti.oishi.model.remote.network.MealsNetworkDataSource;
-import com.iti.oishi.model.repos.IRepository;
-import com.iti.oishi.model.repos.Repository;
-import com.iti.oishi.splash.view.ISplashNavListener;
-import com.iti.oishi.splash.view.SplashFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity implements ISplashNavListener {
+public class MainActivity extends AppCompatActivity {
+
+    private BottomNavigationView bottomNavView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragmentContainerView, new SplashFragment())
-                    .commit();
+        bottomNavView = findViewById(R.id.bottom_nav);
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        NavController navController = null;
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
         }
-    }
 
-    private Fragment getHomeFragment() {
-        return new LoginFragment();
-    }
+        if (navController != null) {
+            NavigationUI.setupWithNavController(bottomNavView, navController);
+        }
 
-    @Override
-    public void navToEntryScreen() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentContainerView, getHomeFragment())
-                .commit();
+        if (navController != null) {
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                int destId = destination.getId();
+                if (destId == R.id.homeFragment || destId == R.id.favoriteFragment || destId == R.id.calendarFragment) {
+                    bottomNavView.setVisibility(View.VISIBLE);
+                } else {
+                    bottomNavView.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 }

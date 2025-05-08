@@ -1,5 +1,6 @@
 package com.iti.oishi.splash.view;
 
 public interface ISplashFragmentView {
-    void navToNextScreen();
+    void navToLogin();
+    void navToHome();
 }

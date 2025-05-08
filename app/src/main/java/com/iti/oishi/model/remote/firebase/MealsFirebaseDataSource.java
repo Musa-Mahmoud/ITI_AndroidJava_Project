@@ -1,56 +1,81 @@
 package com.iti.oishi.model.remote.firebase;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MealsFirebaseDataSource {
+public class MealsFirebaseDataSource implements IMealsFirebaseDataSource {
 
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private static final String USERS_COLLECTION = "users";
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firebaseFirestore;
 
-    public void signUpWithEmail(String email, String password, IMealsFirebaseCallback callback) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        callback.onAuthSuccess(task.getResult().getUser());
-                    } else {
-                        String errorMessage = task.getException() != null
-                                ? task.getException().getLocalizedMessage()
-                                : "Unknown error occurred.";
-                        callback.onAuthFailure(errorMessage);
-                    }
-                });
+    public MealsFirebaseDataSource() {
+        this.firebaseAuth = FirebaseAuth.getInstance();
+        this.firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
-    public void signInWithEmail(String email, String password, IMealsFirebaseCallback callback) {
+    @Override
+    public void loginWithEmail(String email, String password, IMealsFirebaseCallback callback) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        callback.onAuthSuccess(task.getResult().getUser());
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser user = authResult.getUser();
+                    if (user != null) {
+                        callback.onAuthSuccess(user);
                     } else {
-                        String errorMessage = task.getException() != null
-                                ? task.getException().getLocalizedMessage()
-                                : "Unknown error occurred.";
-                        callback.onAuthFailure(errorMessage);
+                        callback.onAuthFailure("Authentication failed, user null");
                     }
-                });
+                })
+                .addOnFailureListener(e -> callback.onAuthFailure(e.getMessage()));
     }
 
-    public void signInWithGoogle(@NonNull GoogleSignInAccount account, IMealsFirebaseCallback callback) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+    @Override
+    public void loginWithGoogle(AuthCredential credential, IMealsFirebaseCallback callback) {
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        callback.onAuthSuccess(task.getResult().getUser());
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser user = authResult.getUser();
+                    if (user != null) {
+                        callback.onAuthSuccess(user);
                     } else {
-                        String errorMessage = task.getException() != null
-                                ? task.getException().getLocalizedMessage()
-                                : "Unknown error occurred.";
-                        callback.onAuthFailure(errorMessage);
+                        callback.onAuthFailure("Google sign-in failed, user null");
                     }
-                });
+                })
+                .addOnFailureListener(e -> callback.onAuthFailure(e.getMessage()));
+    }
+
+    @Override
+    public void logout() {
+        firebaseAuth.signOut();
+    }
+
+    @Override
+    public void registerWithEmail(String email, String password, IMealsFirebaseCallback callback) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser user = authResult.getUser();
+                    if (user != null) {
+                        callback.onAuthSuccess(user);
+                    } else {
+                        callback.onAuthFailure("Registration failed, user null");
+                    }
+                })
+                .addOnFailureListener(e -> callback.onAuthFailure(e.getMessage()));
+    }
+
+    @Override
+    public FirebaseUser getCurrentUser() {
+        return firebaseAuth.getCurrentUser();
+    }
+
+    @Override
+    public void addUserToFirestore(FirebaseUser user, Object data, IMealsFirebaseCallback callback) {
+        addDataToFirestore(USERS_COLLECTION, user.getUid(), data, callback);
+    }
+
+    private void addDataToFirestore(String collection, String documentId, Object data, IMealsFirebaseCallback callback) {
+        firebaseFirestore.collection(collection).document(documentId).set(data)
+                .addOnSuccessListener(aVoid -> callback.onAuthSuccess(firebaseAuth.getCurrentUser()))
+                .addOnFailureListener(e -> callback.onAuthFailure(e.getMessage()));
     }
 }

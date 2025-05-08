@@ -1,8 +1,13 @@
 package com.iti.oishi.model.remote;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.iti.oishi.model.dto.CategoryResponse;
 import com.iti.oishi.model.dto.IngredientResponse;
 import com.iti.oishi.model.dto.NameResponse;
+import com.iti.oishi.model.remote.firebase.IMealsFirebaseCallback;
+import com.iti.oishi.model.remote.firebase.IMealsFirebaseDataSource;
 import com.iti.oishi.model.remote.network.IMealsNetworkDataSource;
 import com.iti.oishi.model.remote.network.IMealsService;
 import com.iti.oishi.model.remote.network.INetworkCallback;
@@ -13,12 +18,22 @@ import retrofit2.Call;
 
 public class MealsRemoteDataSource implements IMealsRemoteDataSource {
     private static MealsRemoteDataSource instance;
-    private final IMealsNetworkDataSource mealsNetworkDataSource;
-    private final IMealsService mealsService;
+    private IMealsNetworkDataSource mealsNetworkDataSource;
+    private IMealsFirebaseDataSource mealsFirebaseDataSource;
+    private final IMealsService mealsService = MealsNetworkDataSource.getMealsService();
 
     private MealsRemoteDataSource(IMealsNetworkDataSource mealsNetworkDataSource) {
         this.mealsNetworkDataSource = mealsNetworkDataSource;
-        mealsService = MealsNetworkDataSource.getMealsService();
+    }
+
+    private MealsRemoteDataSource(IMealsFirebaseDataSource mealsFirebaseDataSource) {
+        this.mealsFirebaseDataSource = mealsFirebaseDataSource;
+    }
+
+    private MealsRemoteDataSource(IMealsNetworkDataSource mealsNetworkDataSource,
+                                  IMealsFirebaseDataSource mealsFirebaseDataSource) {
+        this.mealsNetworkDataSource = mealsNetworkDataSource;
+        this.mealsFirebaseDataSource = mealsFirebaseDataSource;
     }
 
     public static MealsRemoteDataSource getInstance(IMealsNetworkDataSource mealsNetworkDataSource) {
@@ -26,6 +41,33 @@ public class MealsRemoteDataSource implements IMealsRemoteDataSource {
             instance = new MealsRemoteDataSource(mealsNetworkDataSource);
         }
         return instance;
+    }
+    public static MealsRemoteDataSource getInstance(IMealsFirebaseDataSource mealsFirebaseDataSource) {
+        if (instance == null) {
+            instance = new MealsRemoteDataSource(mealsFirebaseDataSource);
+        }
+        return instance;
+    }
+
+    public static MealsRemoteDataSource getInstance(IMealsNetworkDataSource mealsNetworkDataSource,
+                                                    IMealsFirebaseDataSource mealsFirebaseDataSource) {
+        if (instance == null) {
+            instance = new MealsRemoteDataSource(mealsNetworkDataSource, mealsFirebaseDataSource);
+        }
+        return instance;
+    }
+
+    public void signUpWithEmail(String email, String password, IMealsFirebaseCallback callback) {
+        mealsFirebaseDataSource.registerWithEmail(email, password, callback);
+    }
+
+    public void signInWithEmail(String email, String password, IMealsFirebaseCallback callback) {
+        mealsFirebaseDataSource.loginWithEmail(email, password, callback);
+    }
+
+    public void signInWithGoogle(GoogleSignInAccount account, IMealsFirebaseCallback callback) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mealsFirebaseDataSource.loginWithGoogle(credential, callback);
     }
 
     @Override

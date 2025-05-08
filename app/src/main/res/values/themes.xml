@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Oishi" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="backgroundDrawable">@color/background</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
         <item name="colorSecondary">@color/secondary</item>
@@ -18,6 +19,17 @@
         <item name="cardViewStyle">@style/Widget.Oishi.CardView</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">@style/TextAppearance.Oishi</item>
+    </style>
+
+    <style name="Theme.YourApp" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="bottomNavigationStyle">@style/Widget.YourApp.BottomNavigationView</item>
+    </style>
+
+    <style name="Widget.YourApp.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">?attr/colorPrimary</item>
+        <item name="itemTextColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- Button Style -->

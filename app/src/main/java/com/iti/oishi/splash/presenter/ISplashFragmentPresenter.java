@@ -1,5 +1,5 @@
 package com.iti.oishi.splash.presenter;
 
-public interface ISplashPresenterView {
+public interface ISplashFragmentPresenter {
     void scheduleHomeNavigation(long delayMs);
 }

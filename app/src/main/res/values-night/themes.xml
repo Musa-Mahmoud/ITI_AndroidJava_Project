@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Oishi" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="backgroundDrawable">@color/background_dark</item>
         <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryVariant">@color/primary_variant_dark</item>
         <item name="colorSecondary">@color/secondary_dark</item>
