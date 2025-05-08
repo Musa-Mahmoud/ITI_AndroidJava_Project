@@ -25,57 +25,29 @@ public class HomeFragment extends Fragment implements IHomeFragmentView {
 
     private IHomeFragmentPresenter presenter;
 
-    // UI components
-    private TextView mealName, originCountry, ingredients, measurements, steps;
-    private ImageView mealImage, favoriteButton, plannedButton, playVideoButton;
-
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        mealName = view.findViewById(R.id.mealName);
-        originCountry = view.findViewById(R.id.originCountry);
-        ingredients = view.findViewById(R.id.ingredientsLabel);
-        measurements = view.findViewById(R.id.measurementsLabel);
-        steps = view.findViewById(R.id.stepsLabel);
-        mealImage = view.findViewById(R.id.mealImage);
-        favoriteButton = view.findViewById(R.id.favoriteButton);
-        plannedButton = view.findViewById(R.id.calendarButton);
-        playVideoButton = view.findViewById(R.id.videoThumbnail);
-
-        presenter.getRandomMeal();
-
-        return view;
+        return inflater.inflate(R.layout.fragment_home, container, false);;
     }
 
     @Override
     public void displayMeal(Meal meal) {
-        mealName.setText(meal.getName());
-        originCountry.setText(meal.getCategory());
-//        ingredients.setText();
-//        measurements.setText();
-//        steps.setText();
 
-        Glide.with(requireContext())
-                .load(meal.getImageUrl())
-                .placeholder(R.drawable.ic_loading)
-                .into(mealImage);
     }
 
     @Override
     public void displayPlannedMeals(List<Meal> plannedMeals) {
-        Toast.makeText(requireContext(), "Planned meals loaded: " + plannedMeals.size(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void showFavoriteAddedMessage() {
-        Toast.makeText(requireContext(), "Meal added to favorites!", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void showFavoriteRemovedMessage() {
-        Toast.makeText(requireContext(), "Meal removed from favorites!", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
