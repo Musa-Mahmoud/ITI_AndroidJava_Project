@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,6 @@ public class LoginFragment extends Fragment implements ILoginFragmentView {
         passwordInput = view.findViewById(R.id.password);
         progressBar = view.findViewById(R.id.progressBar);
 
-        // Initialize presenter with Firebase repository
         Repository repository = Repository.getInstance(MealsRemoteDataSource.getInstance(new MealsFirebaseDataSource()));
         loginPresenter = new LoginFragmentPresenter(this, repository);
 
@@ -74,7 +74,19 @@ public class LoginFragment extends Fragment implements ILoginFragmentView {
 //            }
 //        });
 
-        Button forgotPasswordButton = view.findViewById(R.id.forgotPassword);
+        TextView signUpButton = view.findViewById(R.id.signUp);
+        signUpButton.setOnClickListener(v -> {
+            NavController navController = NavHostFragment.findNavController(this);
+            navController.navigate(R.id.action_login_to_signup);
+        });
+
+        TextView guestButton = view.findViewById(R.id.guestLogin);
+        guestButton.setOnClickListener(v -> {
+            NavController navController = NavHostFragment.findNavController(this);
+            navController.navigate(R.id.action_login_to_home);
+        });
+
+        TextView forgotPasswordButton = view.findViewById(R.id.forgotPassword);
         forgotPasswordButton.setOnClickListener(v -> {
             String email = emailInput.getText().toString().trim();
             if (!email.isEmpty()) {
@@ -91,18 +103,6 @@ public class LoginFragment extends Fragment implements ILoginFragmentView {
             } else {
                 Toast.makeText(requireContext(), "Please enter your email.", Toast.LENGTH_SHORT).show();
             }
-        });
-
-        Button signUpButton = view.findViewById(R.id.signUp);
-        signUpButton.setOnClickListener(v -> {
-            NavController navController = NavHostFragment.findNavController(this);
-            navController.navigate(R.id.action_login_to_signup);
-        });
-
-        Button guestButton = view.findViewById(R.id.guestLogin);
-        guestButton.setOnClickListener(v -> {
-            NavController navController = NavHostFragment.findNavController(this);
-            navController.navigate(R.id.action_login_to_home);
         });
     }
 

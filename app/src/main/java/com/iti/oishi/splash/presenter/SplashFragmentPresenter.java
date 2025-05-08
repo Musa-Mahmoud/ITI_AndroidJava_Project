@@ -30,15 +30,13 @@ public class SplashFragmentPresenter implements ISplashFragmentPresenter {
                 .subscribe(() -> {
                     if (splashFragmentView != null) {
                         boolean isLoggedIn = repository.isLoggedIn();
-                        if (isLoggedIn) {
+                        if (!isLoggedIn) {
                             splashFragmentView.navToLogin();
                         } else {
                             splashFragmentView.navToHome();
                         }
-                        disposables.clear();
                     }
                 });
         disposables.add(disposable);
-
     }
 }
