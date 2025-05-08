@@ -21,7 +21,6 @@ import com.iti.oishi.splash.presenter.ISplashFragmentPresenter;
 import com.iti.oishi.splash.presenter.SplashFragmentPresenter;
 
 public class SplashFragment extends Fragment implements ISplashFragmentView {
-    private ISplashFragmentPresenter splashPresenterView;
 
     public SplashFragment() {
     }
@@ -30,12 +29,6 @@ public class SplashFragment extends Fragment implements ISplashFragmentView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = requireContext();
-        IRepository repository = Repository.getInstance(
-                MealsLocalDataSource.getInstance(context)
-        );
-
-        splashPresenterView = new SplashFragmentPresenter(SplashFragment.this, repository);
-
     }
 
     @Override
@@ -48,6 +41,12 @@ public class SplashFragment extends Fragment implements ISplashFragmentView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        IRepository repository = Repository.getInstance(
+                MealsLocalDataSource.getInstance(getContext())
+        );
+
+        ISplashFragmentPresenter splashPresenterView = new SplashFragmentPresenter(SplashFragment.this, repository);
+
         LottieAnimationView viewSplash = view.findViewById(R.id.frgSplash);
         viewSplash.playAnimation();
 
@@ -56,7 +55,7 @@ public class SplashFragment extends Fragment implements ISplashFragmentView {
 
     @Override
     public void navToLogin() {
-        NavHostFragment.findNavController(this).navigate(R.id.action_splash_to_home);
+        NavHostFragment.findNavController(this).navigate(R.id.action_splash_to_login);
 
     }
 

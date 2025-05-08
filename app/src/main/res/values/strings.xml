@@ -27,4 +27,7 @@
     <string name="have_any_account">Have any account?</string>
     <string name="create">Create</string>
     <string name="username">Username</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Steps</string>
+    <string name="measurements">Mesurements</string>
 </resources>
